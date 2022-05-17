@@ -8,6 +8,7 @@ import MyAccount from "./screens/MyAccount";
 import Info from "./screens/Info";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
+import Favorites from "./screens/Favorites";
 import { NavigationContainer } from "@react-navigation/native";
 import { Icon } from "react-native-elements";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -37,22 +38,6 @@ function HomeStack() {
         },
       }}
     >
-      {/* <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarLabel: "Home",
-          tabBarOptions: {
-            activeTintColor: "white",
-            inactiveTintColor: "#fff",
-          },
-          tabBarIcon: () => (
-            <Icon type="material" name="home" color="#e0d1a3" />
-          ),
-          headerTransparent: true,
-          title: "",
-        }}
-      /> */}
       <Tab.Screen
         name="Info"
         component={Info}
@@ -87,6 +72,18 @@ function HomeStack() {
           title: "",
         }}
       />
+      {/* <Tab.Screen
+        name="Favorites"
+        component={Favorites}
+        options={{
+          tabBarLabel: "Favorites",
+          tabBarIcon: () => (
+            <Icon type="material" name="favorite" color="#e0d1a3" />
+          ),
+          headerTransparent: true,
+          title: "",
+        }}
+      /> */}
       <Tab.Screen
         name="MyAccount"
         component={MyAccount}

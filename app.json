@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Travelling app for all the tourists going to New York City. "
   }
 }

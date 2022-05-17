@@ -12,11 +12,10 @@ import styles from "./styles";
 import dayjs from "dayjs";
 import { Icon } from "react-native-elements";
 import { auth, db } from "../firebase/config";
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { ref, child, get, set } from "firebase/database";
 
 export default function News() {
   const [events, setEvents] = useState([]);
-  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     async function getEvents() {
@@ -37,14 +36,26 @@ export default function News() {
 
   const addToFavorites = (event) => {
     const uid = auth.currentUser.uid;
+    const eventId = event.id;
     const eventInfo = {
-      eventId: event.id,
       eventTitle: event.title,
     };
 
-    set(ref(db, "users/" + uid + "/events" + event.id), eventInfo);
-    // Alert.alert("Event saved");
-    console.log("event saved");
+    const dbRef = ref(db);
+    get(child(dbRef, `users/${uid}/events/${eventId}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          Alert.alert("Alert", "Event already saved");
+        } else {
+          set(ref(db, "users/" + uid + "/events/" + eventId), eventInfo);
+          Alert.alert("Event saved");
+          console.log("event saved");
+          () => showToast();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -85,7 +96,7 @@ export default function News() {
                 {dayjs(event.datetime_utc).format("DD/MM/YY")}
               </Text>
 
-              <TouchableOpacity onPress={addToFavorites(event)}>
+              <TouchableOpacity onPress={() => addToFavorites(event)}>
                 <Text style={{ marginLeft: 150 }}>
                   <Icon
                     type="ionicon"

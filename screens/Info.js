@@ -59,8 +59,8 @@ export default function Info() {
       });
   }, []);
 
-  console.log(object);
-  console.log(Object.keys(object));
+  //console.log(object);
+  //console.log(Object.keys(object));
 
   const convert = () => {
     const rate = object[currency];

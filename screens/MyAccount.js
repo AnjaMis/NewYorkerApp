@@ -8,6 +8,7 @@ import { getDatabase, ref, child, get } from "firebase/database";
 
 export default function MyAccount({ navigation }) {
   const [userData, setUserData] = useState("");
+  const [savedEvents, setSavedEvents] = useState([]);
 
   const dbRef = ref(db);
   const userId = auth.currentUser.uid;
@@ -15,8 +16,8 @@ export default function MyAccount({ navigation }) {
   get(child(dbRef, `users/${userId}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        //console.log(snapshot.val());
         setUserData(snapshot.val());
+        setSavedEvents(snapshot.val().events);
       } else {
         console.log("No data available");
       }
@@ -43,6 +44,8 @@ export default function MyAccount({ navigation }) {
         <Text style={{ alignSelf: "center" }}>
           <Icon type="ionicon" name="person" color="#e0d1a3" size={200} />
         </Text>
+        <Text style={styles.regularText}>Email: {userData.email}</Text>
+        <Text style={styles.regularText}>Name: {userData.name}</Text>
 
         <TouchableOpacity style={styles.button} onPress={logout}>
           <Text style={styles.buttonTitle}>Log out </Text>
