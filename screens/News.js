@@ -11,6 +11,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import styles from "./styles";
 import dayjs from "dayjs";
 import { Icon } from "react-native-elements";
+import { auth, db } from "../firebase/config";
+import { getDatabase, ref, child, get, set } from "firebase/database";
 
 export default function News() {
   const [events, setEvents] = useState([]);
@@ -32,6 +34,18 @@ export default function News() {
 
     getEvents();
   }, []);
+
+  const addToFavorites = (event) => {
+    const uid = auth.currentUser.uid;
+    const eventInfo = {
+      eventId: event.id,
+      eventTitle: event.title,
+    };
+
+    set(ref(db, "users/" + uid + "/events" + event.id), eventInfo);
+    // Alert.alert("Event saved");
+    console.log("event saved");
+  };
 
   return (
     <View style={styles.container}>
@@ -71,24 +85,14 @@ export default function News() {
                 {dayjs(event.datetime_utc).format("DD/MM/YY")}
               </Text>
 
-              <TouchableOpacity onPress={() => setSaved(true)}>
+              <TouchableOpacity onPress={addToFavorites(event)}>
                 <Text style={{ marginLeft: 150 }}>
-                  {saved && (
-                    <Icon
-                      type="ionicon"
-                      name="heart"
-                      color="#232621"
-                      size={50}
-                    />
-                  )}
-                  {!saved && (
-                    <Icon
-                      type="ionicon"
-                      name="heart-outline"
-                      color="#232621"
-                      size={50}
-                    />
-                  )}
+                  <Icon
+                    type="ionicon"
+                    name="heart-outline"
+                    color="#232621"
+                    size={50}
+                  />
                 </Text>
               </TouchableOpacity>
             </View>
