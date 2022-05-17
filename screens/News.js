@@ -9,13 +9,12 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
+import dayjs from "dayjs";
+import { Icon } from "react-native-elements";
 
 export default function News() {
   const [events, setEvents] = useState([]);
-
-  var eventTitles = [];
-  var eventDates = [];
-  var eventLocations = [];
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     async function getEvents() {
@@ -25,7 +24,6 @@ export default function News() {
         .then((response) => response.json())
         .then((data) => {
           setEvents(data.events);
-          console.log("LOOK ", events);
         })
         .catch((error) => {
           console.log("Error", error);
@@ -33,22 +31,7 @@ export default function News() {
     }
 
     getEvents();
-    console.log("total 2  ", events.length);
   }, []);
-
-  console.log("total  ", events.length);
-
-  const showEvents = () => {
-    for (var i = 0; i < events.length; i++) {
-      eventTitles.push(events[i].title);
-      eventDates.push(events[i].datetime_utc);
-      eventLocations.push(events[i].venue.name);
-    }
-
-    console.log("TITLES ", eventTitles.length);
-    console.log("DATES ", eventDates.length);
-    console.log("LOCATIONS ", eventLocations.length);
-  };
 
   return (
     <View style={styles.container}>
@@ -58,17 +41,59 @@ export default function News() {
       >
         <Text style={styles.header}>Events</Text>
 
-        <View>
-          <Text>Title</Text>
-          {/* <Image source={require("../assets/NewYorker2.png")} /> */}
-          <View>
-            <Text>Date</Text>
-            <Text>Location</Text>
+        {events.map((event) => (
+          <View style={styles.eventBox}>
+            <Text style={styles.eventTitle}> {event.title}</Text>
+            <Text style={styles.eventLocation}>
+              {" "}
+              <Icon
+                type="ionicon"
+                name="location-outline"
+                color="#232621"
+                size={20}
+              />{" "}
+              {event.venue.name}
+            </Text>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.eventDate}>
+                <Icon
+                  type="ionicon"
+                  name="calendar-outline"
+                  color="#232621"
+                  size={20}
+                />{" "}
+                {dayjs(event.datetime_utc).format("DD/MM/YY")}
+              </Text>
+
+              <TouchableOpacity onPress={() => setSaved(true)}>
+                <Text style={{ marginLeft: 150 }}>
+                  {saved && (
+                    <Icon
+                      type="ionicon"
+                      name="heart"
+                      color="#232621"
+                      size={50}
+                    />
+                  )}
+                  {!saved && (
+                    <Icon
+                      type="ionicon"
+                      name="heart-outline"
+                      color="#232621"
+                      size={50}
+                    />
+                  )}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <TouchableOpacity style={styles.button} onPress={() => showEvents()}>
-          <Text style={styles.buttonTitle}>See events </Text>
-        </TouchableOpacity>
+        ))}
       </KeyboardAwareScrollView>
     </View>
   );

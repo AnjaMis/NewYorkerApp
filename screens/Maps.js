@@ -11,6 +11,7 @@ import {
 import styles from "./styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MapView, { Marker } from "react-native-maps";
+import { Icon } from "react-native-elements";
 
 export default function Maps() {
   const [address, setAddress] = useState("");
@@ -45,27 +46,18 @@ export default function Maps() {
         style={{ flex: 1, width: "100%" }}
         keyboardShouldPersistTaps="always"
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text
-            style={{
-              color: "#e0d1a3",
-              marginTop: 20,
-              marginBottom: 10,
-              marginLeft: 30,
-              marginRight: 5,
-              fontSize: 16,
-            }}
-          >
-            Address:
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="address"
-            onChangeText={(address) => setAddress(address)}
-          />
-        </View>
+        <Text style={styles.header}></Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter address"
+          onChangeText={(address) => setAddress(address)}
+        />
         <TouchableOpacity onPress={showAddress} style={styles.button}>
-          <Text style={styles.buttonTitle}>FIND</Text>
+          <Text style={styles.buttonTitle}>
+            {" "}
+            <Icon type="ionicon" name="search" color="#232621" size={20} />
+            {"  "} FIND
+          </Text>
         </TouchableOpacity>
         <MapView style={styles.map} region={region}>
           <Marker

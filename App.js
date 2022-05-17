@@ -11,6 +11,10 @@ import Signup from "./screens/Signup";
 import { NavigationContainer } from "@react-navigation/native";
 import { Icon } from "react-native-elements";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LogBox } from "react-native";
+
+console.ignoredYellowBox = true;
+LogBox.ignoreAllLogs();
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -18,7 +22,7 @@ const Stack = createNativeStackNavigator();
 function HomeStack() {
   return (
     <Tab.Navigator
-      //initialRouteName={Home}
+      initialRouteName={MyAccount}
       screenOptions={{
         tabBarStyle: { backgroundColor: "#232621" },
 
@@ -33,7 +37,7 @@ function HomeStack() {
         },
       }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Home"
         component={Home}
         options={{
@@ -45,44 +49,54 @@ function HomeStack() {
           tabBarIcon: () => (
             <Icon type="material" name="home" color="#e0d1a3" />
           ),
+          headerTransparent: true,
+          title: "",
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Info"
         component={Info}
         options={{
-          //tabBarLabel: "Info",
+          tabBarLabel: "Info",
           tabBarIcon: () => (
             <Icon type="material" name="info" color="#e0d1a3" />
           ),
+          headerTransparent: true,
+          title: "",
         }}
       />
       <Tab.Screen
         name="Maps"
         component={Maps}
         options={{
-          //tabBarLabel: "Maps",
+          tabBarLabel: "Maps",
           tabBarIcon: () => <Icon type="material" name="map" color="#e0d1a3" />,
+          headerTransparent: true,
+          title: "",
         }}
       />
       <Tab.Screen
-        name="News"
+        name="Events"
         component={News}
         options={{
-          //tabBarLabel: "News",
+          tabBarLabel: "News",
           tabBarIcon: () => (
-            <Icon type="material" name="book" color="#e0d1a3" />
+            <Icon type="material" name="event" color="#e0d1a3" />
           ),
+          headerTransparent: true,
+          title: "",
         }}
       />
       <Tab.Screen
         name="MyAccount"
         component={MyAccount}
         options={{
-          //tabBarLabel: "My Account",
+          tabBarLabel: "My Account",
           tabBarIcon: () => (
             <Icon type="material" name="person" color="#e0d1a3" />
           ),
+          headerTransparent: true,
+          title: "",
         }}
       />
     </Tab.Navigator>
@@ -92,7 +106,12 @@ function HomeStack() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ title: "", headerTransparent: true }}
+        />
         <Stack.Screen
           name="HomeStack"
           component={HomeStack}
@@ -106,6 +125,11 @@ export default function App() {
         <Stack.Screen
           name="Signup"
           component={Signup}
+          options={{ title: "", headerTransparent: true }}
+        />
+        <Stack.Screen
+          name="MyAccount"
+          component={MyAccount}
           options={{ title: "", headerTransparent: true }}
         />
       </Stack.Navigator>

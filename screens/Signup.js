@@ -10,8 +10,13 @@ import {
 import React, { useState, useEffect } from "react";
 import styles from "./styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-// import { firebase } from "../firebase/config";
-// import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase/config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
@@ -19,14 +24,32 @@ export default function Signup({ navigation }) {
   const [confirmedPassword, setConfirmedPassword] = useState("");
   const [name, setName] = useState("");
 
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       navigation.navigate("HomeStack");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
+
   const signUp = () => {
     if (password === confirmedPassword) {
-      const auth = getAuth();
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          navigation.navigate("MyAccount");
+          const uid = userCredential.user.uid;
+          const data = {
+            // id: uid,
+            email,
+            name,
+          };
+
+          set(ref(db, "users/" + uid), data);
+          // const docRef = await addDoc(collection(db, "Users"), data);
+
+          navigation.navigate("HomeStack");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -65,16 +88,18 @@ export default function Signup({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Password"
+          secureTextEntry
           onChangeText={(text) => setPassword(text)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Confirm password"
+          secureTextEntry
           onChangeText={(text) => setConfirmedPassword(text)}
         />
-        <TouchableOpacity style={styles.button} onPress={() => signUp()}>
-          <Text style={styles.buttonTitle}>Log in </Text>
+        <TouchableOpacity style={styles.button} onPress={signUp}>
+          <Text style={styles.buttonTitle}>Sign up </Text>
         </TouchableOpacity>
       </KeyboardAwareScrollView>
     </View>
